@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
 import { Bar } from "@vx/shape";
@@ -16,17 +16,26 @@ const margin = 60;
 const x = (d) => d.label;
 const y = (d) => d.count;
 
-export default function OverallTopics() {
-  const { loading, error, data } = useQuery(gql`
-    {
-      allPosts(count: 2000) {
-        likelyTopics {
-          label
-          likelihood
+export default function OverallTopics({ count }) {
+  const [topicData, setTopicData] = useState(null);
+  const { loading, error, data } = useQuery(
+    gql`
+      query getPosts($count: Int!) {
+        allPosts(count: $count) {
+          likelyTopics {
+            label
+            likelihood
+          }
         }
       }
+    `,
+    {
+      variables: {
+        count,
+      },
+      fetchPolicy: "no-cache",
     }
-  `);
+  );
 
   const {
     tooltipData,
@@ -42,10 +51,15 @@ export default function OverallTopics() {
     scroll: true,
   });
 
+  if (data && data != topicData) {
+    setTopicData(data);
+    return <CircularProgress />;
+  }
+
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(</p>;
 
-  const highestLikelyhoodTopics = data.allPosts.map((post) => {
+  const highestLikelyhoodTopics = topicData.allPosts.map((post) => {
     let highestTopic = { label: "placeholder", likelihood: 0 };
     post.likelyTopics.forEach((topic) => {
       if (topic.likelihood > highestTopic.likelihood) {
@@ -63,6 +77,7 @@ export default function OverallTopics() {
   function average(nums) {
     return nums.reduce((a, b) => a + b) / nums.length;
   }
+
   const highestFrequencyTopics = [];
   uniqueTopics.forEach((topic) => {
     let count = 0;
@@ -93,7 +108,7 @@ export default function OverallTopics() {
       Math.max.apply(
         Math,
         highestFrequencyTopics.map(function (o) {
-          return o.count;
+          return o.count + 100;
         })
       ),
     ],
@@ -111,12 +126,16 @@ export default function OverallTopics() {
     showTooltip({
       tooltipLeft: coords.x,
       tooltipTop: coords.y,
-      tooltipData: "AVG Likelihood: " + precise(datum.averageLiklihood),
+      tooltipData: {
+        count: datum.count,
+        likelihood: "AVG Likelihood: " + precise(datum.averageLiklihood),
+      },
     });
   };
 
   return (
-    <div className="flex flex-col relative">
+    <div>
+      <h3>Most popular topics for the selected data</h3>
       <svg width={width} height={height} className="m-auto" ref={containerRef}>
         <rect
           y={10}
@@ -126,7 +145,6 @@ export default function OverallTopics() {
           height={yMax}
           width={xMax}
         ></rect>
-
         <Grid
           top={10}
           left={margin}
@@ -140,14 +158,7 @@ export default function OverallTopics() {
         <Group top={10} left={margin} width={xMax} height={yMax}>
           <AxisLeft scale={yScale} numTicks={10} label="Count" />
           {highestFrequencyTopics.map((d, i) => {
-            const height =
-              (yMax * d.count) /
-              Math.max.apply(
-                Math,
-                highestFrequencyTopics.map(function (o) {
-                  return o.count;
-                })
-              );
+            const height = yMax - yScale(y(d));
             const barX = xScale(d.label) + barWidth / 2;
             return (
               <>
@@ -172,6 +183,11 @@ export default function OverallTopics() {
             label="Topic"
             numTicks={highestFrequencyTopics.length - 2}
             top={yMax}
+            tickLabelProps={() => ({
+              fill: "#292929",
+              fontSize: 10,
+              textAnchor: "middle",
+            })}
           />
         </Group>
         {tooltipOpen && (
@@ -181,7 +197,7 @@ export default function OverallTopics() {
             top={tooltipTop}
             left={tooltipLeft}
           >
-            {tooltipData}
+            Count: {tooltipData.count}, {tooltipData.likelihood}
           </TooltipInPortal>
         )}
       </svg>
