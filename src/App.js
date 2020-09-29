@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import { ApolloProvider, gql, useQuery } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import OverallTopics from "./components/OverallTopics";
 import UserSearch from "./components/UserSearch";

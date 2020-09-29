@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
 import { Group } from "@vx/group";
@@ -66,7 +66,7 @@ export default function OverallTopics({ count }) {
   });
 
   //set the return data into state
-  if (data && data != monthData) {
+  if (data && data !== monthData) {
     setMonthData(data);
     //return progress bar for this re-render
     return <CircularProgress />;

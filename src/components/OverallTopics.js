@@ -13,7 +13,6 @@ const width = 600;
 const height = 400;
 const margin = 60;
 
-const x = (d) => d.label;
 const y = (d) => d.count;
 
 export default function OverallTopics({ count }) {
@@ -51,7 +50,7 @@ export default function OverallTopics({ count }) {
     scroll: true,
   });
 
-  if (data && data != topicData) {
+  if (data && data !== topicData) {
     setTopicData(data);
     return <CircularProgress />;
   }

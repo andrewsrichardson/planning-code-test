@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery, gql } from "@apollo/client";
 import { CircularProgress } from "@material-ui/core";
 
@@ -28,6 +28,7 @@ export default function GetUser({ id }) {
     <div>
       <h1>{firstName}</h1>
       <h2>{lastName}</h2>
+      <h2>{email}</h2>
     </div>
   );
 }
