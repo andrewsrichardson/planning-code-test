@@ -26,14 +26,12 @@ function App() {
     <ApolloProvider client={client}>
       <div className="App">
         <h1>Blog Topic Analysis Dashboard</h1>
-        <h2>Total Posts Analysed: {postCount}</h2>
+        <h2>Posts Analysed: {postCount}</h2>
         <FormControl>
-          <InputLabel id="demo-simple-select-label">
-            Posts to Analyse
-          </InputLabel>
+          <InputLabel id="select-label">Posts to Analyse</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
+            labelId="select-label"
+            id="simple-select"
             value={postCount}
             onChange={handleChange}
           >

@@ -18,7 +18,6 @@ export default function UserSearch() {
         }
       }
     `
-    // { fetchPolicy: "cache-only" }
   );
 
   const [currentUser, setCurrentUser] = useState("");
@@ -40,10 +39,10 @@ export default function UserSearch() {
   return (
     <div>
       <FormControl>
-        <InputLabel id="demo-simple-select-label">Select User </InputLabel>
+        <InputLabel id="select-label-user">Select User</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="select-label"
+          id="simple-select"
           value={currentUser}
           onChange={handleChange}
         >

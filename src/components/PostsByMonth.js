@@ -126,7 +126,7 @@ export default function OverallTopics({ count }) {
   };
 
   return (
-    <div>
+    <div className="graph-container">
       <h3>
         Total Number of posts per month
         <span style={{ fontWeight: "100", fontSize: "9px" }}>

@@ -15,7 +15,13 @@ code {
   display: flex;
   justify-content: space-evenly;
 }
-.top-container > div {
+.graph-container {
   border: 1px solid #e3e3e3;
   padding: 2rem;
+}
+#select-label {
+  top: -10px;
+}
+#select-label-user {
+  position: relative;
 }

@@ -59,6 +59,7 @@ export default function OverallTopics({ count }) {
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(</p>;
 
+  //find the highest likleyhood topic from each post
   const highestLikelyhoodTopics = topicData.allPosts.map((post) => {
     let highestTopic = { label: "placeholder", likelihood: 0 };
     post.likelyTopics.forEach((topic) => {
@@ -69,15 +70,17 @@ export default function OverallTopics({ count }) {
     });
     return highestTopic;
   });
-
+  //create a set of all unique topics
   const uniqueTopics = [
     ...new Set(highestLikelyhoodTopics.map((topic) => topic.label)),
   ];
 
+  //helper function
   function average(nums) {
     return nums.reduce((a, b) => a + b) / nums.length;
   }
 
+  //count all posts relating to a topic
   const highestFrequencyTopics = [];
   uniqueTopics.forEach((topic) => {
     let count = 0;
@@ -95,6 +98,7 @@ export default function OverallTopics({ count }) {
     });
   });
 
+  //setup graphing elements
   const xMax = width - margin;
   const yMax = height - margin;
 
@@ -134,7 +138,7 @@ export default function OverallTopics({ count }) {
   };
 
   return (
-    <div>
+    <div className="graph-container">
       <h3>Most popular topics for the selected data</h3>
       <svg width={width} height={height} className="m-auto" ref={containerRef}>
         <rect
@@ -201,7 +205,6 @@ export default function OverallTopics({ count }) {
           </TooltipInPortal>
         )}
       </svg>
-      <p className="text-xs" style={{ maxHeight: "20px" }}></p>
     </div>
   );
 }
